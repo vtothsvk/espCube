@@ -1,0 +1,3 @@
+[submodule "components/ina226"]
+	path = components/ina226
+	url = https://github.com/vtothsvk/idf-ina226.git
