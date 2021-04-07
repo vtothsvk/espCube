@@ -28,7 +28,7 @@ More info: [ESP-IDF build system](https://docs.espressif.com/projects/esp-idf/en
 ```
 mkdir build
 cd build
-cmake .. -DBLE_DEBUG=true -DDATA_DEBUG=true -GNinja
+cmake .. -GNinja
 ```
 
 2. Build the project (can be skipped)
