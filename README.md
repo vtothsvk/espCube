@@ -73,7 +73,7 @@ idf.py flash -p /dev/ttyS0
 
 ## Building using provided batch/bash scripts
 
-* All project management scripts cane be found in the *scripts* folder
+* All project management scripts cane be found in the **scripts** folder
 
 1. Set up an enviroment variable **ESP_IDF_PATH** with a path to your cloned ESP-IDF repository
 
