@@ -1,2 +1,3 @@
-idf.py build
+cd build
+ninja
 set /p=Press ENTER to exit...

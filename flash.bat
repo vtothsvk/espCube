@@ -1,2 +1,2 @@
-idf.py flash
+ninja flash
 set /p=Press ENTER to exit...
