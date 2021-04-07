@@ -4,8 +4,6 @@ cd..
 
 rd build /s /q
 
-:: set set "currentDirectory=%cd%
-
 :: Infer IDF_PATH from script location
  set IDF_PATH=%ESP_IDF_PATH%
 
@@ -40,13 +38,6 @@ if not "%PATH_ADDITIONS%"=="" echo     %PATH_ADDITIONS:;=&echo.    %
 echo Checking if Python packages are up to date...
 python.exe %IDF_PATH%\tools\check_python_dependencies.py
 if %errorlevel% neq 0 goto :end
-
-echo.
-echo Done! You can now compile ESP-IDF projects.
-echo Go to the project directory and run:
-echo.
-echo   idf.py build
-echo.
 
 goto :end
 
