@@ -23,6 +23,9 @@ static int64_t lastMeasure = 0;
 static int64_t lastPol = 0;
 static int64_t lastAdv = 0;
 static bool polarity = DEFAULT_POL;
+static int adcRaw = 0;
+static float v = 0.00;
+static const adc_bits_width_t width = ADC_WIDTH_BIT_12; 
 
 void bddRun() {
     printf("BDD START\r\n");
@@ -38,7 +41,10 @@ void bddRun() {
 
     polInit();
     pwmInit();
+    adcInit();
     inaInit();
+
+    lastMeasure = lastPol = lastAdv = esp_timer_get_time();
 
     while (true) {
         inaMeasure();
@@ -46,6 +52,7 @@ void bddRun() {
         advLoop();
 
         vTaskDelay(100 / portTICK_RATE_MS);
+        //vTaskDelay(1000 / portTICK_RATE_MS);
     }//while (true)
 }//bddRun
 
@@ -73,11 +80,13 @@ void inaMeasure() {
         ina226_data_t data;
         esp_err_t ret = i226GetMeasurement(&ina, &data);
         if (ret) {
-            printf("read ret: %d", ret);
+            printf("read ret: %d\r\n", ret);
         } else {
             printf("I: %.5fA\r\n", data.current);
         }//if (ret)
-
+        float myv = 0;
+        myv = readV();
+        printf("myv: %.2f\r\n", myv);
         /*
         ina219_data_t mydata;
         ret = myina.getMeasurement(&mydata);
@@ -183,20 +192,25 @@ esp_err_t advertiseData() {
 
     cJSON *data[1];
 
-    cJSON *event[1];
+    cJSON *event[2];
     cJSON *array;
-
-    array = Create_array_of_anything(event, 1);
-
-    ina226_data_t inaData;
-
-    esp_err_t ret = i226GetResults(&ina, &inaData);
 
     event[0] = cJSON_CreateObject();
 
-    cJSON_AddStringToObject(event[0], "Name", "Current");
-    cJSON_AddNumberToObject(event[0], "Value", inaData.current);
+    cJSON_AddStringToObject(event[0], "Name", "Voltage");
+    cJSON_AddNumberToObject(event[0], "Value", v);
+
+    ina226_data_t inaData;
+    esp_err_t ret = i226GetResults(&ina, &inaData);
+
+    event[1] = cJSON_CreateObject();
+
+    cJSON_AddStringToObject(event[1], "Name", "Current");
+    cJSON_AddNumberToObject(event[1], "Value", inaData.current);
+
     
+    array = Create_array_of_anything(event, 2);
+
     data[0] = cJSON_CreateObject();
 
     time_t epoch;
@@ -248,7 +262,45 @@ esp_err_t advertiseData() {
            esp_http_client_get_status_code(client),
            esp_http_client_get_content_length(client));
     }//if (err == ESP_OK)
+    esp_http_client_close(client);
     esp_http_client_cleanup(client);
 
     return err;
 }
+
+esp_err_t adcInit() {
+    gpio_num_t adc_gpio_num;
+
+    esp_err_t ret = adc2_pad_get_io_num(ADC_GPIO, &adc_gpio_num);
+    if (ret) return ret;
+
+    adc2_pad_get_io_num(ADC_GPIO, &adc_gpio_num);
+    vTaskDelay(2 / portTICK_RATE_MS);
+
+    return ESP_OK;
+}//adcInit
+
+esp_err_t adcRead(int* raw) {
+    return adc2_get_raw(ADC_GPIO, width, raw);
+}//adcRead
+
+float readV() {
+    int32_t vraw = 0;
+    int buffer = 0;
+    uint8_t runs = 0;
+    
+    int64_t time = esp_timer_get_time();
+    for(uint8_t i = 0; i < 20; i++) {
+        if (adcRead(&buffer) == ESP_OK) {
+            vraw += (int32_t)buffer;
+            runs++;
+            printf("siz\r\n");
+        }
+        vTaskDelay(1);
+    }
+    time = esp_timer_get_time() - time;
+    printf("conversion time: %lld\r\n", time);
+    printf("raw %d, lastbuff %d\r\n", vraw, buffer);
+
+    return (runs) ? ((float)vraw / (float)runs) : (0.00);
+}//readV

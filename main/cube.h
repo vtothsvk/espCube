@@ -23,11 +23,14 @@
 //BDD shield config
 #define PWM_GPIO    GPIO_NUM_26
 #define POL_GPIO    GPIO_NUM_19
+#define ADC_GPIO    ADC2_CHANNEL_4
+//#define ADC_GPIO    ADC1_CHANNEL_5 
 
 //BDD config
 #define BDD_MTIME       2//s
 #define BDD_POLTIME     60//s
 #define BDD_DC          0//*100%
+#define PWM_FREQ        100//Hz
 
 #define DEFAULT_POL     NEGATIVE
 
@@ -49,5 +52,8 @@ void pwmInit(void);
 void pwm(void);
 void advLoop(void);
 esp_err_t advertiseData(void);
+esp_err_t adcInit(void);
+esp_err_t adcRead(int* raw);
+float readV(void);
 
 #endif

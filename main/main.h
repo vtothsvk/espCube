@@ -19,6 +19,7 @@
 //Drivers
 #include "driver/ledc.h"
 #include "driver/gpio.h"
+#include "driver/adc.h"
 //WiFi and HTTP client
 #include "esp_wifi.h"
 #include "esp_http_client.h"

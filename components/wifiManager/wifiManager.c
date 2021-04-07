@@ -93,7 +93,6 @@ esp_err_t wifiInit() {
     //init netif with default config
     esp_netif_create_default_wifi_sta();
 
-    
     return ESP_OK;
 }
 
