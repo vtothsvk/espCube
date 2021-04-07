@@ -2,6 +2,12 @@
 
 ESP32 SoC based modular board fitted with a peristaltic pump
 
+# Project setup
+
+To be able to build, an **authCredentials** file must be provided with all the relevant UEFIS credentials for the device ur about to build FW for and flash.
+
+*components/newAuth/* insert here
+
 # SDK setup
 
 Project based on the [ESP-IDF SKD](https://github.com/espressif/esp-idf).
