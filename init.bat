@@ -1,2 +1,3 @@
+git submodule update --init --recursive
 idf.py set-target esp32
 set /p=Press ENTER to exit...
