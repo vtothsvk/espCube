@@ -154,7 +154,7 @@ esp_err_t wifiProvisioning() {
     //check if provisioned
     ESP_ERROR_CHECK(wifi_prov_mgr_is_provisioned(&provisioned));
 
-    if (!provisioned) {
+    //if (!provisioned) {
         ESP_LOGI(WIFI_MANAGER_TAG, "Starting provisioning");
 
     /* generate device name */
@@ -191,12 +191,10 @@ esp_err_t wifiProvisioning() {
 
     //clean up
     vEventGroupDelete(wifi_event_group);
-    } else {
+    /*} else {
         wifi_prov_mgr_deinit();
-
-        /* Start Wi-Fi station */
         wifi_init_sta();
-    }
+    }*/
 
     return ESP_OK;
 }
