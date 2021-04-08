@@ -176,6 +176,7 @@ static esp_err_t http_event_handler(esp_http_client_event_t *evt) {
             ESP_LOGD(TAG, "HTTP_EVENT_ON_DATA, len=%d", evt->data_len);
             if (!esp_http_client_is_chunked_response(evt->client)) {
                 // If user_data buffer is configured, copy the response into the buffer
+                printf("response: %.*s", evt->data_len, (char*)evt->data);
                 if (evt->user_data) {
                     memcpy(evt->user_data + output_len, evt->data, evt->data_len);
                 } else {
@@ -270,7 +271,7 @@ esp_err_t advertiseData() {
         .url = POST_ENDPOINT,
         .cert_pem = ssl_cert,
         .event_handler = http_event_handler
-        //.transport_type = HTTP_TRANSPORT_OVER_TCP
+        //.transport_type = HTTP_TRANSPORT_OVER_SSL
     };
 
     esp_http_client_handle_t client = esp_http_client_init(&config);

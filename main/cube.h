@@ -41,7 +41,7 @@
 #define LOOP_DELAY      100//ms
 
 //HTTP config
-#define POST_ENDPOINT   "https://fei.edu.r-das.sk:51415/Auth"
+#define POST_ENDPOINT   "https://fei.edu.r-das.sk:51415/api/v1/Auth"
 
 void bddRun(void);
 esp_err_t inaInit(void);
