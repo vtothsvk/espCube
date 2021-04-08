@@ -1,9 +1,11 @@
 @echo off
 
+set /p port=Enter COM port: 
+
 cd..
 
 :: Infer IDF_PATH from script location
- set IDF_PATH=%ESP_IDF_PATH%
+set IDF_PATH=%ESP_IDF_PATH%
 
 echo idf path is %IDF_PATH%
 
@@ -60,10 +62,12 @@ set IDF_TOOLS_JSON_PATH=
 set OLD_PATH=
 set PATH_ADDITIONS=
 
-if "%1" == "" (
-idf.py flash
+if "%port%" == "" (
+    echo no port provided using default
+    idf.py flash   
 ) else (
-idf.py flash -p %1
+    echo flashing to port %port%
+    idf.py flash -p %port%
 )
 
 set /p=Press ENTER to exit...
