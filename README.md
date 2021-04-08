@@ -6,7 +6,7 @@ ESP32 SoC based modular board fitted with a peristaltic pump
 
 To be able to build, an **authCredentials** file must be provided with all the relevant UEFIS credentials for the device ur about to build FW for and flash.
 
-*components/newAuth/* insert here
+*components/newAuth/include* insert here
 
 # SDK setup
 
