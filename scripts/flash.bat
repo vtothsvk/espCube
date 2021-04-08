@@ -1,5 +1,6 @@
 @echo off
-
+echo available devices:
+mode
 set /p port=Enter COM port: 
 
 cd..
