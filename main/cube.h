@@ -21,7 +21,7 @@
 #define MYINA_ADDR  PIN_CONFIG_TO_ADDR(1, 1)
 
 //BDD shield config
-#define PWM_GPIO    GPIO_NUM_26
+#define PWM_GPIO    GPIO_NUM_32
 #define POL_GPIO    GPIO_NUM_19
 #define ADC_GPIO    ADC2_CHANNEL_4
 //#define ADC_GPIO    ADC1_CHANNEL_5 
