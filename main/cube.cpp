@@ -301,7 +301,6 @@ esp_err_t advertiseData() {
     esp_http_client_close(client);
     esp_http_client_cleanup(client);
 
-    cJSON_Delete(root);
     free(my_json_string);
 
     return err;
