@@ -61,17 +61,16 @@ static const adc_bits_width_t width = ADC_WIDTH_BIT_12;
 void bddRun() {
     printf("BDD START\r\n");
 
-    /*
     wifiInit();
     wifiProvisioning();
     syncTime();
-    */
+    
     esp_err_t ret = i2cdev_init();
     if(ret) {
         printf("I2C dev init: %d\r\n", ret);
     }
 
-    //polInit();
+    polInit();
     pwmInit();
     //adcInit();
     inaInit();
@@ -80,11 +79,10 @@ void bddRun() {
 
     while (true) {
         inaMeasure();
-        //polTime();
-        //advLoop();
+        polTime();
+        advLoop();
 
         vTaskDelay(100 / portTICK_RATE_MS);
-        //vTaskDelay(1000 / portTICK_RATE_MS);
     }//while (true)
 }//bddRun
 
@@ -116,9 +114,9 @@ void inaMeasure() {
         } else {
             printf("I: %.5fA\r\n", data.current);
         }//if (ret)
-        //float myv = 0;
-        //myv = readV();
-        //printf("myv: %.2f\r\n", myv);
+        float myv = 0;
+        myv = readV();
+        printf("myv: %.2f\r\n", myv);
         /*
         ina219_data_t mydata;
         ret = myina.getMeasurement(&mydata);
@@ -152,8 +150,8 @@ void pwmInit() {
     gpio_set_direction(PWM_GPIO, GPIO_MODE_OUTPUT);
     gpio_set_level(PWM_GPIO, BDD_DC);
     */
-
-    pwm.setDuty(0);
+    //pwm.setDuty(0);
+    pwm = 0;
 }//pwmInit
 
 void advLoop() {
@@ -245,7 +243,6 @@ esp_err_t advertiseData() {
     cJSON_AddStringToObject(event[1], "Name", "Current");
     cJSON_AddNumberToObject(event[1], "Value", inaData.current);
 
-    
     array = Create_array_of_anything(event, 2);
 
     data[0] = cJSON_CreateObject();
@@ -269,7 +266,7 @@ esp_err_t advertiseData() {
     root = Create_array_of_anything(data, 1);
 
     //cJSON_AddItemToObject(root, "Data", array);
-    const char *my_json_string = cJSON_Print(root);
+    char *my_json_string = cJSON_Print(root);
 	//ESP_LOGI(TAG, "my_json_string\n%s", my_json_string);
     printf("\r\n%s\r\n", my_json_string);
     cJSON_Delete(root);
@@ -303,6 +300,9 @@ esp_err_t advertiseData() {
     }//if (err == ESP_OK)
     esp_http_client_close(client);
     esp_http_client_cleanup(client);
+
+    cJSON_Delete(root);
+    free(my_json_string);
 
     return err;
 }
