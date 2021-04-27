@@ -33,6 +33,15 @@
 #include "wifiManager.h"
 #include "newAuth.h"
 #include "esp_json.h"
+#include "pwmOut.h"
+
+#include <stdio.h>
+#include <math.h>
+#include <esp_system.h>
+
+#include "esp_err.h"
+#include "driver/ledc.h"
+#include "driver/gpio.h"
 
 //Cube 
 #include "cube.h"

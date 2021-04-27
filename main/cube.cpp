@@ -3,6 +3,8 @@
 static ina226_t ina;
 authHandler auth;
 
+pwmOut pwm(PWM_GPIO, LEDC_CHANNEL_0, LEDC_TIMER_0, PWM_FREQ);
+
 const char ssl_cert[] =
 "-----BEGIN CERTIFICATE-----\n"
 "MIIEZTCCA02gAwIBAgIQQAF1BIMUpMghjISpDBbN3zANBgkqhkiG9w0BAQsFADA/\n"
@@ -59,26 +61,27 @@ static const adc_bits_width_t width = ADC_WIDTH_BIT_12;
 void bddRun() {
     printf("BDD START\r\n");
 
+    /*
     wifiInit();
     wifiProvisioning();
     syncTime();
-
+    */
     esp_err_t ret = i2cdev_init();
     if(ret) {
         printf("I2C dev init: %d\r\n", ret);
     }
 
-    polInit();
+    //polInit();
     pwmInit();
-    adcInit();
+    //adcInit();
     inaInit();
 
     lastMeasure = lastPol = lastAdv = esp_timer_get_time();
 
     while (true) {
         inaMeasure();
-        polTime();
-        advLoop();
+        //polTime();
+        //advLoop();
 
         vTaskDelay(100 / portTICK_RATE_MS);
         //vTaskDelay(1000 / portTICK_RATE_MS);
@@ -113,9 +116,9 @@ void inaMeasure() {
         } else {
             printf("I: %.5fA\r\n", data.current);
         }//if (ret)
-        float myv = 0;
-        myv = readV();
-        printf("myv: %.2f\r\n", myv);
+        //float myv = 0;
+        //myv = readV();
+        //printf("myv: %.2f\r\n", myv);
         /*
         ina219_data_t mydata;
         ret = myina.getMeasurement(&mydata);
@@ -144,9 +147,13 @@ void polTime() {
 }//polTime
 
 void pwmInit() {
+    /*
     gpio_reset_pin(PWM_GPIO);
     gpio_set_direction(PWM_GPIO, GPIO_MODE_OUTPUT);
     gpio_set_level(PWM_GPIO, BDD_DC);
+    */
+
+    pwm.setDuty(0);
 }//pwmInit
 
 void advLoop() {
